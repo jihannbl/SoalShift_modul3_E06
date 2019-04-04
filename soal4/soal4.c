@@ -75,17 +75,17 @@ void* unzip2 (void *arg)
 int main(void)
 {
 	pthread_create(&(tid1), NULL, save1, NULL);
-  pthread_create(&(tid2), NULL, save2, NULL);
+  	pthread_create(&(tid2), NULL, save2, NULL);
 	pthread_create(&(tid3), NULL, zip1, NULL);
-  pthread_create(&(tid4), NULL, zip2, NULL);
+  	pthread_create(&(tid4), NULL, zip2, NULL);
 	pthread_create(&(tid5), NULL, unzip1, NULL);
 	pthread_create(&(tid6), NULL, unzip2, NULL);
 
 	pthread_join(tid1, NULL);
 	pthread_join(tid2, NULL);
 	pthread_join(tid3, NULL);
-  pthread_join(tid4, NULL);
+  	pthread_join(tid4, NULL);
 	pthread_join(tid5, NULL);
-  pthread_join(tid6, NULL);
+  	pthread_join(tid6, NULL);
     return 0;
 }
