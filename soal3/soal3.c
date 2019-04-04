@@ -14,6 +14,7 @@ pthread_t tid1;
 pthread_t tid2;
 pthread_t tid3;
 pthread_t tid4;
+pthread_t tid5;
 
 void* fitur(void *arg)
 {
@@ -21,7 +22,7 @@ void* fitur(void *arg)
         printf("1. Tampilkan All Status\n");
         printf("2. Agmal Ayo Bangun\n");
         printf("3. Iraj Ayo Tidur\n");
-	      printf("4. Exit\n\n");
+	printf("4. Exit\n\n");
         printf("Pilih Fitur: "); scanf("%d", &pilih);
 }
 
@@ -42,7 +43,7 @@ void* Agmal_Bangun(void *arg)
 	else
 	{
 		WakeUp_Status += 15;
-//		printf("wakeup nambah %d\n", WakeUp_Status);
+		printf("wakeup nambah %d\n", WakeUp_Status);
 	}
 }
 
@@ -56,8 +57,24 @@ void* Iraj_Tidur(void *arg)
 	else
 	{
 		Spirit_Status -= 20;
-//		printf("spirit kurang %d\n", Spirit_Status);
+		printf("spirit kurang %d\n", Spirit_Status);
 	}
+}
+
+void* input(void *arg)
+{
+        if(inputIraj == 3)
+        {
+                printf("Fitur Agmal Ayo Bangun disabled 10 s\n");
+                pthread_create(&(tid3), NULL, Agmal_Bangun, NULL);
+        }
+
+        else if(inputAgmal == 3)
+        {
+                printf("Fitur Iraj Ayo Tidur disabled 10 s\n");
+                pthread_create(&(tid4), NULL, Iraj_Tidur, NULL);
+        }
+
 }
 
 int main()
@@ -91,8 +108,7 @@ int main()
 		{
 			if(inputIraj == 3)
                         {
-                                printf("Fitur Agmal Ayo Bangun disabled 10 s\n");
-                                pthread_create(&(tid3), NULL, Agmal_Bangun, NULL);
+
                         }
 			else
 			{
@@ -106,8 +122,7 @@ int main()
 		{
 			if(inputAgmal == 3)
 			{
-				printf("Fitur Iraj Ayo Tidur disabled 10 s\n");
-				pthread_create(&(tid4), NULL, Iraj_Tidur, NULL);
+
 			}
 			else
 			{
@@ -124,6 +139,9 @@ int main()
 		{
 			printf("Input Salah\n");
 		}
+
+		pthread_create(&(tid5), NULL, input, NULL);
+                pthread_join(tid5, NULL);
 	}
 	return 0;
 }
