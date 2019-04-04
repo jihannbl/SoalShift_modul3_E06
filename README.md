@@ -247,6 +247,227 @@ Client penjual
 Client pembeli  
 ![clientpembeli](soal2/clientpembeliimage.PNG)  
 
+## Soal-3
+Agmal dan Iraj merupakan 2 sahabat yang sedang kuliah dan hidup satu kostan, sayangnya mereka mempunyai gaya hidup yang berkebalikan, dimana Iraj merupakan laki-laki yang sangat sehat,rajin berolahraga dan bangun tidak pernah kesiangan sedangkan Agmal hampir menghabiskan setengah umur hidupnya hanya untuk tidur dan ‘ngoding’. Dikarenakan mereka sahabat yang baik, Agmal dan iraj sama-sama ingin membuat satu sama lain mengikuti gaya hidup mereka dengan cara membuat Iraj sering tidur seperti Agmal, atau membuat Agmal selalu bangun pagi seperti Iraj. Buatlah suatu program C untuk menggambarkan kehidupan mereka dengan spesifikasi sebagai berikut:
+
+ a. Terdapat 2 karakter Agmal dan Iraj
+ 
+ b. Kedua karakter memiliki status yang unik
+ - Agmal mempunyai WakeUp_Status, di awal program memiliki status 0
+ - Iraj memiliki Spirit_Status, di awal program memiliki status 100
+ - Terdapat 3 Fitur utama
+   - All Status, yaitu menampilkan status kedua sahabat
+   - Ex: Agmal WakeUp_Status = 75   
+     Iraj Spirit_Status = 30
+   - “Agmal Ayo Bangun” menambah WakeUp_Status Agmal sebesar 15 point
+   - “Iraj Ayo Tidur” mengurangi Spirit_Status Iraj sebanyak 20 point
+ - Terdapat Kasus yang unik dimana:
+   - Jika Fitur “Agmal Ayo Bangun” dijalankan sebanyak 3 kali, maka Fitur “Iraj Ayo Tidur” Tidak bisa dijalankan selama 10        detik (Dengan mengirim pesan ke sistem “Fitur Iraj Ayo Tidur disabled 10 s”)
+   - Jika Fitur  “Iraj Ayo Tidur” dijalankan sebanyak 3 kali, maka Fitur “Agmal Ayo Bangun” Tidak bisa dijalankan selama 10        detik (Dengan mengirim pesan ke sistem “Agmal Ayo Bangun disabled 10 s”)
+ - Program akan berhenti jika Salah Satu :
+   - WakeUp_Status Agmal >= 100 (Tampilkan Pesan “Agmal Terbangun,mereka bangun pagi dan berolahraga”)
+   - Spirit_Status Iraj <= 0 (Tampilkan Pesan “Iraj ikut tidur, dan bangun kesiangan bersama Agmal”)
+ - Syarat Menggunakan Lebih dari 1 Thread
+ 
+ **_Jawaban_**
+ 
+ ```c
+char orang1[10]="Agmal";
+char orang2[10]="Iraj";
+int WakeUp_Status;
+int Spirit_Status;
+int pilih, inputAgmal, inputIraj;
+
+pthread_t tid1;
+pthread_t tid2;
+pthread_t tid3;
+pthread_t tid4;
+pthread_t tid5;
+ ```
+- Mendeklarasikan variabel **orang1** dan **orang2** untuk 2 karakter yaitu _Agmal_ dan _Iraj_.
+- Terdapat variabel **WakeUp_Status** untuk menyimpan status dari karakter _Agmal_ sedangkan **Spirit_Status** untuk _Iraj_.
+- Variabel **pilih** untuk memilih fitur yang ada, **inputAgmal** untuk menyimpan seberapa banyak fitur "Agmal Ayo Bangun"     dijalankan dan **inputIraj** untuk fitur "Iraj Ayo Tidur".
+- Terdapat 5 thread yang saya pakai
+
+```c
+void* fitur(void *arg)
+{
+	printf("\nFitur Utama:\n");
+        printf("1. Tampilkan All Status\n");
+        printf("2. Agmal Ayo Bangun\n");
+        printf("3. Iraj Ayo Tidur\n");
+	printf("4. Exit\n\n");
+        printf("Pilih Fitur: "); scanf("%d", &pilih);
+}
+```
+- Thread untuk memanggil menu awal
+
+```c
+void* AllStatus(void *arg)
+{
+	printf("\nSemua Status: \n");
+	printf("Agmal : %d\n", WakeUp_Status);
+	printf("Iraj : %d\n\n", Spirit_Status);
+}
+```
+- Thread untuk Fitur Utama "All Status"
+
+```c
+void* Agmal_Bangun(void *arg)
+{
+	if(inputIraj == 3)
+        {
+                sleep(10);
+		inputIraj = 0;
+        }
+	else
+	{
+		WakeUp_Status += 15;
+	}
+}
+```
+- Thread untuk Fitur Utama "Agmal Ayo Bangun"
+- Thread ini akan disabled selama 10 detik apabila Fitur Utama "Iraj Ayo Tidur" telah dijalankan selama 3 kali, maka terdapat if condition untuk variabel **inputIraj==3** apabila benar maka akan **sleep(10)** dan set **inputIraj** menjadi 0 kembali
+- Else, Fitur "Agmal Ayo Bangun" akan menambah **WakeUp_Status** sebanyak 15
+
+```c
+void* Iraj_Tidur(void *arg)
+{
+	if(inputAgmal == 3)
+	{
+		sleep(10);
+		inputAgmal = 0;
+	}
+	else
+	{
+		Spirit_Status -= 20;
+	}
+}
+```
+- Thread untuk Fitur Utama "Iraj Ayo Tidur"
+- Thread ini akan disabled selama 10 detik apabila Fitur Utama "Agmal Ayo Bangun" telah dijalankan selama 3 kali, maka terdapat if condition untuk variabel **inputAgmal==3** apabila benar maka akan **sleep(10)** dan set **inputAgmal** menjadi 0 kembali
+- Else, Fitur "Iraj Ayo Tidur" akan mengurangi **Spirit_Status** sebanyak 20
+
+```c
+void* input(void *arg)
+{
+        if(inputIraj == 3)
+        {
+                printf("Fitur Agmal Ayo Bangun disabled 10 s\n");
+                pthread_create(&(tid3), NULL, Agmal_Bangun, NULL);
+        }
+
+        else if(inputAgmal == 3)
+        {
+                printf("Fitur Iraj Ayo Tidur disabled 10 s\n");
+                pthread_create(&(tid4), NULL, Iraj_Tidur, NULL);
+        }
+
+}
+```
+- Thread untuk cek apakah salah satu variabel **inputIraj** atau **inputAgmal** memiliki nilai sebanyak 3.
+- Apabila iya, maka tampilkan pesan "Fitur Agmal Ayo Bangun disabled 10 s" jika **inputIraj**=3 atau "Fitur Iraj Ayo Tidur disabled 10 s" jika **inputAgmal**=3. Dan masing-masing akan memanggil thread untuk fitur "Agmal Ayo Bangun" atau "Iraj Ayo Tidur" untuk menjalankan fungsi **sleep(10)**.
+
+_**Pada fungsi main**_
+```c
+WakeUp_Status = 0;
+Spirit_Status = 100;
+```
+- Awal mendeklarasikan variabel **WakeUp_Status**=0 dan **Spirit_Status**=100
+- Lalu terdapat **while(1)** untuk input fitur berulang-ulang.
+
+```c
+if(WakeUp_Status >= 100)
+{
+	printf("Agmal Terbangun, mereka bangun pagi dan berolahraga\n");
+	break;
+}
+else if(Spirit_Status <= 0)
+{
+	printf("Iraj ikut tidur, dan bangun kesiangan bersama Agmal\n");
+	break;
+}
+```
+- Cek apakah **WakeUp_Status** sudah melebihi 100 maka keluarkan pesan "Agmal Terbangun, mereka bangun pagi dan berolahraga" dan akan keluar dari program, begitu juga untuk **Spirit_Status** sudah kurang dari 0 akan keluar pesan "Iraj ikut tidur, dan bangun kesiangan bersama Agmal" dan keluar dari program.
+
+```c
+pthread_create(&(tid1), NULL, fitur, NULL);
+pthread_join(tid1, NULL);
+```
+- Thread untuk selalu menampilkan Menu Awal berupa fitur-fitur utama
+
+```c
+if(pilih==1)
+{
+	pthread_create(&(tid2), NULL, AllStatus, NULL);
+	pthread_join(tid2, NULL);
+}
+
+else if(pilih==2)
+{
+	if(inputIraj == 3)
+	{
+
+	}
+	else
+	{
+		pthread_create(&(tid3), NULL, Agmal_Bangun, NULL);
+		pthread_join(tid3, NULL);
+		inputAgmal++;
+	}
+}
+
+else if(pilih==3)
+{
+	if(inputAgmal == 3)
+	{
+
+	}
+	else
+	{
+		pthread_create(&(tid4), NULL, Iraj_Tidur, NULL);
+		pthread_join(tid4, NULL);
+		inputIraj++;
+	}
+}
+else if(pilih==4)
+{
+	exit(0);
+}
+else
+{
+	printf("Input Salah\n");
+}
+
+```
+- If condition untuk memilih fitur, tiap fitur AllStatus, Agmal maupun Iraj dipanggil maka akan menjalankan thread untuk masing-masing fitur.
+- Increment variabel **inputAgmal** dan **inputIraj** setiap Fitur Agmal atau Iraj dipanggil.
+
+```c
+pthread_create(&(tid5), NULL, input, NULL);
+pthread_join(tid5, NULL);
+```
+- Di akhir **while(1)**, memanggil thread untuk mengecek input Agmal maupun Iraj
+
+_**Hasil:**_
+
+Apabila menampilkan AllStatus  
+![AllStatus](soal3/AllStatus.PNG)  
+
+Memanggil Fitur Agmal Ayo Bangun sebanyak 3 kali, lalu Fitur Iraj Disabled. Namun fitur Agmal tetap bisa dijalankan  
+![Coba1](soal3/Coba1.PNG) 
+
+Memanggil Fitur Agmal Ayo Bangun sebanyak 3 kali, lalu Fitur Iraj Disabled. Fitur Iraj dipanggil maka tidak bisa dijalankan 
+![Coba2](soal3/Coba2.PNG) 
+
+Memanggil Fitur Agmal Ayo Bangun sebanyak 3 kali, lalu Fitur Iraj Disabled. Lalu menunggu 10 detik dan jalankan fitur Iraj
+![tunggu](soal3/tunggu.PNG) 
+
+Contoh apabila variabel WakeUp_Status melebihi 100 dan keluar dari program
+![exit](soal3/exit.PNG)  
+
+## Soal-4
+
 ## Soal-5
 Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta.   
 - Pemain memelihara seekor monster lucu dalam permainan. Pemain dapat  memberi nama pada monsternya.  
