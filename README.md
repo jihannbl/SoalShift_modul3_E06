@@ -84,6 +84,159 @@ Pada suatu hari ada orang yang ingin berjualan 1 jenis barang secara private, di
 - Server penjual akan mencetak stok saat ini setiap 5 detik sekali  
 - Menggunakan thread, socket, shared memory
 
+**_Jawaban_**  
+Terdapat 4 program jawaban yaitu
+1. Program Server Penjual
+2. Program Server Pembeli
+3. Program Client Penjual
+4. Program Client Pembeli
+
+**Program Server Penjual**
+```c
+#define PORT 8080
+```
+Server dan client pembeli menggunakan port `8080`
+```c
+void *message(void *arg){
+    char message[100];
+    int socket = *((int *)arg);
+    int valread;
+    while( valread = recv(socket, message, 100, 0) > 0){
+        // printf("%s\n", message);
+        if (strcmp(message, "tambah") == 0){
+            *value = *value + 1;
+            send(socket, "transaksi berhasil", sizeof("transaksi berhasil"), 0);
+        }else{
+            send(socket, "transaksi gagal", sizeof("transaksi gagal"), 0);
+        }
+        memset(message, 0, sizeof(message));
+    }
+    if (valread == 0){
+        printf("Client disconnects.\n");
+    }
+    total_connection--;
+}
+```
+- Fungsi **message** digunakan untuk menghandle connection dari client.
+- **total_connection** merupakan variabel bantu untuk menghitung jumlah koneksi yang masuk ke server.
+- **variabel message** merupakan variabel untuk menampung pesan yang diterima oleh server.
+- Setelah menerima pesan dari client, server pasti mengirim pesan balik ke client sesuai dengan kondisinya. Server mengirim `"-1"` apabila connectionnya direject.
+
+```c
+void *fiveSecondTimer(void *arg){
+    while(1){
+        int a = *((int *)arg);
+        printf("Stock saat ini: %d\n", a);
+        sleep(5);
+    }
+}
+```
+- Fungsi **fiveSecondTimer** digunakan untuk menampilkan stock setiap 5 detik. Fungsi ini berjalan pada sebuah thread.
+
+```c
+while(1){
+    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) {
+        perror("accept");
+        exit(EXIT_FAILURE);
+    }
+    if (total_connection == 1){
+        send(new_socket, reject, sizeof(reject), 0);
+        close(new_socket);
+    }else{
+        printf("New Clients detected.\n");
+        total_connection++;
+        int *socket = (int*)malloc(sizeof(int));
+        *socket = new_socket;
+        pthread_t messageHandler;
+        pthread_create(&messageHandler, NULL, &message, (void *)socket);
+    }
+}
+```
+- Setiap saat server menerima koneksi socket dari client. Namun ketika **total_connection** active sudah 1 maka socket baru tersebut langsung ditutup.
+- Apabila **total_connection** masih 0 maka dijalankan thread untuk menghandle socket tersebut.
+
+**Program Server Pembeli**
+```c
+#define PORT 8000
+```
+Server dan client pembeli menggunakan port `8000`
+```c
+void *message(void *arg){
+    char message[100];
+    int socket = *((int *)arg);
+    int valread;
+    while( valread = recv(socket, message, 100, 0) > 0){
+        // printf("%s\n", message);
+        if (strcmp(message, "beli") == 0){
+            if (*value > 0){
+                *value = *value - 1;
+                send(socket, "transaksi berhasil", sizeof("transaksi berhasil"), 0);
+            }else{
+                send(socket, "transaksi gagal", sizeof("transaksi gagal"), 0);
+            }
+        }else{
+            send(socket, "transaksi gagal", sizeof("transaksi gagal"), 0);
+        }
+        memset(message, 0, sizeof(message));
+    }
+    if (valread == 0){
+        printf("Client disconnects.\n");
+    }
+    total_connection--;
+}
+```
+- Fungsi **message** pada Server pembeli sama seperti pada fungsi server penjual, perbedaannya pada `strcmp(message, "beli")`
+- Fungsi utama pada Server Pembeli juga sama seperti Server Penjual.
+
+**Program Client Penjual**
+```c
+#define PORT 8080
+```
+Client penjual menggunakan port 8080.
+```c
+while(1){
+    if (~scanf("%s", tipe)){
+        send(sock , tipe , strlen(tipe) , 0 );
+    }
+    char message[100];
+    if (recv(sock, message, 100, 0)){
+        if (strcmp(message, "-1") == 0) {
+            printf("Connection rejected\n");
+            return 0;
+        }else {
+            printf("%s\n",message);
+        }
+    }
+}
+```
+- Potongan program diatas digunakan untuk membaca inputan user terus menerus. Apabila menerima inputan string maka inputan tersebut dikirim ke server.
+- Setelah mengirim pesan maka client akan menunggu pesan response dari server.
+- Apabila pesan yang diterima `-1` maka program keluar karena koneksi ditolak.
+
+**Program Client Pembeli**
+```c
+#define PORT 8000
+```
+Server dan client pembeli menggunakan port `8000`
+
+```c
+while(1){
+    if (~scanf("%s", tipe)){
+        send(sock , tipe , strlen(tipe) , 0 );
+    }
+    char message[100];
+    if (recv(sock, message, 100, 0)){
+        if (strcmp(message, "-1") == 0) {
+            printf("Connection rejected\n");
+            return 0;
+        }else {
+            printf("%s\n",message);
+        }
+    }
+}
+```
+- Fungsi utama dari client pembeli sama seperti client penjual.
+
 ## Soal-5
 Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta.   
 - Pemain memelihara seekor monster lucu dalam permainan. Pemain dapat  memberi nama pada monsternya.  

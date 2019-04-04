@@ -18,17 +18,10 @@ void *message(void *arg){
     int socket = *((int *)arg);
     int valread;
     while( valread = recv(socket, message, 100, 0) > 0){
-        printf("%s\n", message);
+        // printf("%s\n", message);
         if (strcmp(message, "tambah") == 0){
             *value = *value + 1;
             send(socket, "transaksi berhasil", sizeof("transaksi berhasil"), 0);
-        }else if (strcmp(message, "beli") == 0){
-            if (*value > 0){
-                *value = *value - 1;
-                send(socket, "transaksi berhasil", sizeof("transaksi berhasil"), 0);
-            }else{
-                send(socket, "transaksi gagal", sizeof("transaksi gagal"), 0);
-            }
         }else{
             send(socket, "transaksi gagal", sizeof("transaksi gagal"), 0);
         }

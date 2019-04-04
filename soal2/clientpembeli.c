@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#define PORT 8080
+#define PORT 8000
   
 int main(int argc, char const *argv[]) {
     
@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(PORT);
       
-    if(inet_pton(AF_INET, "192.168.1.2", &serv_addr.sin_addr)<=0) {
+    if(inet_pton(AF_INET, "10.151.254.112", &serv_addr.sin_addr)<=0) {
         printf("\nInvalid address/ Address not supported \n");
         return -1;
     }

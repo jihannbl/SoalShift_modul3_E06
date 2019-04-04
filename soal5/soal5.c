@@ -196,9 +196,11 @@ int main(){
                         player->hunger_status = player->hunger_status + 15;
                     }
                 }else if (c == '2'){
-                    player->hygiene_status = player->hygiene_status + 30;
-                    bathCooldown = 20;
-                    pthread_create(&bath, NULL, &cooldown, (void*)&bathCooldown);
+                    if (bathCooldown == 0){
+                        player->hygiene_status = player->hygiene_status + 30;
+                        bathCooldown = 20;
+                        pthread_create(&bath, NULL, &cooldown, (void*)&bathCooldown);
+                    }
                 }else if (c == '4'){
                     gameMode = 3;
                 }
@@ -233,7 +235,7 @@ int main(){
             }
         }
         if (alive == 0){
-            printf("mati cuk\n");
+            printf("Monster mati\n");
             shmdt(shopStock);
             shmctl(shmid, IPC_RMID, NULL);
             changemode(0);
