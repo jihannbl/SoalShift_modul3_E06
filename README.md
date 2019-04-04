@@ -237,6 +237,16 @@ while(1){
 ```
 - Fungsi utama dari client pembeli sama seperti client penjual.
 
+**_Hasil_**  
+Server penjual
+![serverpenjual](soal2/serverpenjualimage.PNG)  
+Server pembeli
+![serverpembeli](soal2/serverpembeliimage.PNG)
+Client penjual  
+![clientpenjual](soal2/clientpenjualimage.PNG)
+Client pembeli
+![clientpembeli](soal2/clientpembeliimage.PNG)  
+
 ## Soal-5
 Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta.   
 - Pemain memelihara seekor monster lucu dalam permainan. Pemain dapat  memberi nama pada monsternya.  
