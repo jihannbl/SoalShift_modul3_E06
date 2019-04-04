@@ -43,7 +43,7 @@ void* Agmal_Bangun(void *arg)
 	else
 	{
 		WakeUp_Status += 15;
-		printf("wakeup nambah %d\n", WakeUp_Status);
+//		printf("wakeup nambah %d\n", WakeUp_Status);
 	}
 }
 
@@ -57,7 +57,7 @@ void* Iraj_Tidur(void *arg)
 	else
 	{
 		Spirit_Status -= 20;
-		printf("spirit kurang %d\n", Spirit_Status);
+//		printf("spirit kurang %d\n", Spirit_Status);
 	}
 }
 
