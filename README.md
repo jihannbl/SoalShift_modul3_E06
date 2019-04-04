@@ -238,13 +238,13 @@ while(1){
 - Fungsi utama dari client pembeli sama seperti client penjual.
 
 **_Hasil_**  
-Server penjual
+Server penjual  
 ![serverpenjual](soal2/serverpenjualimage.PNG)  
-Server pembeli
-![serverpembeli](soal2/serverpembeliimage.PNG)
+Server pembeli  
+![serverpembeli](soal2/serverpembeliimage.PNG)  
 Client penjual  
-![clientpenjual](soal2/clientpenjualimage.PNG)
-Client pembeli
+![clientpenjual](soal2/clientpenjualimage.PNG)  
+Client pembeli  
 ![clientpembeli](soal2/clientpembeliimage.PNG)  
 
 ## Soal-5
