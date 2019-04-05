@@ -508,9 +508,9 @@ Terdapat 6 thread
   - Simpan ke dalam file menggunakan command _> SimpanProses1.txt_ dan _> SimpanProses2.txt_
   
 - Thread untuk zip file menjadi KompresProses1.zip dan menghapus filenya dari folder
-```c
-void* zip1 (void *arg)
-{
+  ```c
+  void* zip1 (void *arg)
+  {
 	while(status1 != 1)
     	{
 
@@ -518,12 +518,12 @@ void* zip1 (void *arg)
 	chdir("/home/jihan/Documents/FolderProses1");
 	system("zip KompresProses1.zip SimpanProses1.txt && rm SimpanProses1.txt");
 	status1=2;
-}
-```
+  }
+  ```
 - Thread untuk zip file menjadi KompresProses2.zip dan menghapus filenya dari folder
-```c
-void* zip2 (void *arg)
-{
+  ```c
+  void* zip2 (void *arg)
+  {
 	while(status2 != 1)
         {
 
@@ -531,16 +531,16 @@ void* zip2 (void *arg)
 	chdir("/home/jihan/Documents/FolderProses2");
 	system("zip KompresProses2.zip SimpanProses2.txt && rm SimpanProses2.txt");
 	status2=2;
-}
-```
+  }
+  ```
   - Menggunakan mutual exclusion untuk menunggu dari thread "save1" dan "save2", thread ini akan dijalankan apabila sebelumnya file SimpanProses1.txt dan SimpanProses2.txt telah berhasil dibuat. Dengan mengecek apakah variabel **status1** dan **status2** sudah bernilai 1.
   - Lalu terdapat command _zip_ untuk zip file menjadi KompresProses1.zip dan KompresProses2.zip lalu _rm_ "nama file" untuk menghapus file tersebut.
   - Set **status1** dan **status2** menjadi 2.
 
 - Thread untuk unzip KompresProses1.zip
-```c
-void* unzip1 (void *arg)
-{
+  ```c
+  void* unzip1 (void *arg)
+  {
         while(status1 != 2)
         {
 
@@ -548,13 +548,13 @@ void* unzip1 (void *arg)
 	sleep(15);
         chdir("/home/jihan/Documents/FolderProses1");
         system("unzip KompresProses1.zip");
-}
-```
+  }
+  ```
 
 - Thread untuk unzip KompresProses2.zip
-```c
-void* unzip2 (void *arg)
-{
+  ```c
+  void* unzip2 (void *arg)
+  {
         while(status2 != 2)
         {
 
@@ -562,21 +562,23 @@ void* unzip2 (void *arg)
 	sleep(15);
         chdir("/home/jihan/Documents/FolderProses2");
         system("unzip KompresProses2.zip");
-}
-```
+  }
+  ```
   - Thread ini juga menggunakan mutual exclusion, untuk menunggu apakah thread zip sebelumnya berhasil dijalankan atau tidak, dengan mengecek variabel **status1** dan **status2** sudah bernilai 2 atau belum.
   - Menggunakan **sleep(15)** untuk menunggu selama 15 detik sebelum KompresProses1.zip maupun KompresProses2.zip diekstrak.
   - Setelah itu terdapat command _unzip_ untuk mengekstrak dari KompresProses1.zip dan KompresProses2.zip.
   
 _**Hasil : **_
 
-Isi dari file SimpanProses1.txt  
+Isi dari file SimpanProses1.txt
 ![file](soal4/file.PNG)
 
-Proses saat zip 
+Proses saat zip
+
 ![zip](soal4/zip.PNG)
 
 Proses saat unzip
+
 ![unzip](soal4/unzip.PNG)
   
 ## Soal-5
