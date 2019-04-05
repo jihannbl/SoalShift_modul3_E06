@@ -568,7 +568,7 @@ Terdapat 6 thread
   - Menggunakan **sleep(15)** untuk menunggu selama 15 detik sebelum KompresProses1.zip maupun KompresProses2.zip diekstrak.
   - Setelah itu terdapat command _unzip_ untuk mengekstrak dari KompresProses1.zip dan KompresProses2.zip.
   
-_**Hasil : **_
+**_Hasil :_**
 
 Isi dari file SimpanProses1.txt
 ![file](soal4/file.PNG)
