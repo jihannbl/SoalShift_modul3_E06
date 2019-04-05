@@ -4,7 +4,7 @@
 1. Ifta Jihan Nabila (05111740000034)
 2. Komang Yogananda MW (05111740000114)
 
-**Penjelasan Soal Shift Modul 2 Sistem Operasi 2019:**
+**Penjelasan Soal Shift Modul 3 Sistem Operasi 2019:**
 * [Soal 1](#Soal-1)
 * [Soal 2](#Soal-2)
 * [Soal 3](#Soal-3)
@@ -287,7 +287,7 @@ pthread_t tid5;
 - Mendeklarasikan variabel **orang1** dan **orang2** untuk 2 karakter yaitu _Agmal_ dan _Iraj_.
 - Terdapat variabel **WakeUp_Status** untuk menyimpan status dari karakter _Agmal_ sedangkan **Spirit_Status** untuk _Iraj_.
 - Variabel **pilih** untuk memilih fitur yang ada, **inputAgmal** untuk menyimpan seberapa banyak fitur "Agmal Ayo Bangun"     dijalankan dan **inputIraj** untuk fitur "Iraj Ayo Tidur".
-- Terdapat 5 thread yang saya pakai
+- Terdapat 5 thread yang dipakai
 
 ```c
 void* fitur(void *arg)
@@ -467,7 +467,118 @@ Contoh apabila variabel WakeUp_Status melebihi 100 dan keluar dari program
 ![exit](soal3/exit.PNG)  
 
 ## Soal-4
+Buatlah sebuah program C dimana dapat menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses. Dimana awalnya list proses disimpan dalam di 2 file ekstensi .txt yaitu  SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2 , setelah itu masing2 file di  kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, setelah itu program akan menunggu selama 15 detik lalu program akan mengekstrak kembali file KompresProses1.zip dan KompresProses2.zip 
 
+Dengan Syarat : 
+- Setiap list proses yang di simpan dalam masing-masing file .txt harus berjalan bersama-sama
+- Ketika mengkompres masing-masing file .txt harus berjalan bersama-sama
+- Ketika Mengekstrak file .zip juga harus secara bersama-sama
+- Ketika Telah Selesai melakukan kompress file .zip masing-masing file, maka program akan memberi pesan “Menunggu 15 detik
+  untuk mengekstrak kembali”
+- Wajib Menggunakan Multithreading
+- Boleh menggunakan system
+
+**_Jawaban_**
+
+Terdapat 6 thread 
+- Thread untuk save ke file SimpanProses1.txt
+  ```c
+  void* save1 (void *arg)
+  {
+	status1 = 0;
+	chdir("/home/jihan/Documents/FolderProses1");
+	system("ps -aux | head -11 | tail -10 > SimpanProses1.txt");
+	status1 = 1;
+  }
+  ```
+  
+- Thread untuk save ke file SimpanProses2.txt
+  ```c
+  void* save2 (void *arg)
+  {
+	status2 = 0;
+	chdir("/home/jihan/Documents/FolderProses2");
+	system("ps -aux | head -11 | tail -10 > SimpanProses2.txt");
+	status2 = 1;
+  }
+  ```
+  - Terdapat variabel **status1** dan **status2** sebagai flag, **status1** dan **status2** akan diset menjadi 1 apabila 10 list proses telah disimpan ke dalam file SimpanProses1.txt dan SimpanProses2.txt
+  - Kami menggunakan system untuk membuka proses yang sedang berjalan _ps -aux_. 
+  - Sedangkan _head -11 | tail -10_ untuk mengambil list dari 10 pertama, terdapat command _tail -10_ agar baris pertama saat memanggil _ps -aux_ yang hanya berisi nama kolom tidak tersimpan ke dalam file.
+  - Simpan ke dalam file menggunakan command _> SimpanProses1.txt_ dan _> SimpanProses2.txt_
+  
+- Thread untuk zip file menjadi KompresProses1.zip dan menghapus filenya dari folder
+```c
+void* zip1 (void *arg)
+{
+	while(status1 != 1)
+    	{
+
+    	}
+	chdir("/home/jihan/Documents/FolderProses1");
+	system("zip KompresProses1.zip SimpanProses1.txt && rm SimpanProses1.txt");
+	status1=2;
+}
+```
+- Thread untuk zip file menjadi KompresProses2.zip dan menghapus filenya dari folder
+```c
+void* zip2 (void *arg)
+{
+	while(status2 != 1)
+        {
+
+        }
+	chdir("/home/jihan/Documents/FolderProses2");
+	system("zip KompresProses2.zip SimpanProses2.txt && rm SimpanProses2.txt");
+	status2=2;
+}
+```
+  - Menggunakan mutual exclusion untuk menunggu dari thread "save1" dan "save2", thread ini akan dijalankan apabila sebelumnya file SimpanProses1.txt dan SimpanProses2.txt telah berhasil dibuat. Dengan mengecek apakah variabel **status1** dan **status2** sudah bernilai 1.
+  - Lalu terdapat command _zip_ untuk zip file menjadi KompresProses1.zip dan KompresProses2.zip lalu _rm_ "nama file" untuk menghapus file tersebut.
+  - Set **status1** dan **status2** menjadi 2.
+
+- Thread untuk unzip KompresProses1.zip
+```c
+void* unzip1 (void *arg)
+{
+        while(status1 != 2)
+        {
+
+        }
+	sleep(15);
+        chdir("/home/jihan/Documents/FolderProses1");
+        system("unzip KompresProses1.zip");
+}
+```
+
+- Thread untuk unzip KompresProses2.zip
+```c
+void* unzip2 (void *arg)
+{
+        while(status2 != 2)
+        {
+
+        }
+	sleep(15);
+        chdir("/home/jihan/Documents/FolderProses2");
+        system("unzip KompresProses2.zip");
+}
+```
+  - Thread ini juga menggunakan mutual exclusion, untuk menunggu apakah thread zip sebelumnya berhasil dijalankan atau tidak, dengan mengecek variabel **status1** dan **status2** sudah bernilai 2 atau belum.
+  - Menggunakan **sleep(15)** untuk menunggu selama 15 detik sebelum KompresProses1.zip maupun KompresProses2.zip diekstrak.
+  - Setelah itu terdapat command _unzip_ untuk mengekstrak dari KompresProses1.zip dan KompresProses2.zip.
+  
+_**Hasil : **_
+
+Isi dari file SimpanProses1.txt  
+![file](soal4/file.PNG)
+
+Proses saat zip 
+![zip](soal4/zip.PNG)
+
+Proses saat unzip
+![unzip](soal4/unzip.PNG)
+  
 ## Soal-5
 Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta.   
 - Pemain memelihara seekor monster lucu dalam permainan. Pemain dapat  memberi nama pada monsternya.  
