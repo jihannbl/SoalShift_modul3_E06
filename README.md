@@ -95,7 +95,7 @@ Terdapat 4 program jawaban yaitu
 ```c
 #define PORT 8080
 ```
-Server dan client pembeli menggunakan port `8080`
+Server dan client penjual menggunakan port `8080`
 ```c
 void *message(void *arg){
     char message[100];
@@ -217,7 +217,7 @@ while(1){
 ```c
 #define PORT 8000
 ```
-Server dan client pembeli menggunakan port `8000`
+Client pembeli menggunakan port `8000`
 
 ```c
 while(1){
