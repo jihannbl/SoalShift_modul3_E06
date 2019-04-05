@@ -15,16 +15,16 @@ int status1, status2;
 void* save1 (void *arg)
 {
 	status1 = 0;
-	chdir("/home/jihan/Document/FolderProses1");
-	system("ps -aux | tail -10 > SimpanProses1.txt");
+	chdir("/home/jihan/Documents/FolderProses1");
+	system("ps -aux | head -11 | tail -10 > SimpanProses1.txt");
 	status1 = 1;
 }
 
 void* save2 (void *arg)
 {
 	status2 = 0;
-	chdir("/home/jihan/Document/FolderProses2");
-	system("ps -aux | tail -10 > SimpanProses2.txt");
+	chdir("/home/jihan/Documents/FolderProses2");
+	system("ps -aux | head -11 | tail -10 > SimpanProses2.txt");
 	status2 = 1;
 }
 
@@ -34,7 +34,7 @@ void* zip1 (void *arg)
     	{
 
     	}
-	chdir("/home/jihan/Document/FolderProses1");
+	chdir("/home/jihan/Documents/FolderProses1");
 	system("zip KompresProses1.zip SimpanProses1.txt && rm SimpanProses1.txt");
 	status1=2;
 }
@@ -45,7 +45,7 @@ void* zip2 (void *arg)
         {
 
         }
-	chdir("/home/jihan/Document/FolderProses2");
+	chdir("/home/jihan/Documents/FolderProses2");
 	system("zip KompresProses2.zip SimpanProses2.txt && rm SimpanProses2.txt");
 	status2=2;
 }
@@ -57,7 +57,7 @@ void* unzip1 (void *arg)
 
         }
 	sleep(15);
-        chdir("/home/jihan/Document/FolderProses1");
+        chdir("/home/jihan/Documents/FolderProses1");
         system("unzip KompresProses1.zip");
 }
 
@@ -68,7 +68,7 @@ void* unzip2 (void *arg)
 
         }
 	sleep(15);
-        chdir("/home/jihan/Document/FolderProses2");
+        chdir("/home/jihan/Documents/FolderProses2");
         system("unzip KompresProses2.zip");
 }
 
