@@ -56,6 +56,7 @@ void* unzip1 (void *arg)
         {
 
         }
+	printf("Menunggu 15 detik untuk mengekstrak kembali\n");
 	sleep(15);
         chdir("/home/jihan/Documents/FolderProses1");
         system("unzip KompresProses1.zip");
@@ -67,6 +68,7 @@ void* unzip2 (void *arg)
         {
 
         }
+	printf("Menunggu 15 detik untuk mengekstrak kembali\n");
 	sleep(15);
         chdir("/home/jihan/Documents/FolderProses2");
         system("unzip KompresProses2.zip");
