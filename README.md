@@ -272,8 +272,6 @@ Agmal dan Iraj merupakan 2 sahabat yang sedang kuliah dan hidup satu kostan, say
  **_Jawaban_**
  
  ```c
-char orang1[10]="Agmal";
-char orang2[10]="Iraj";
 int WakeUp_Status;
 int Spirit_Status;
 int pilih, inputAgmal, inputIraj;
@@ -284,7 +282,6 @@ pthread_t tid3;
 pthread_t tid4;
 pthread_t tid5;
  ```
-- Mendeklarasikan variabel **orang1** dan **orang2** untuk 2 karakter yaitu _Agmal_ dan _Iraj_.
 - Terdapat variabel **WakeUp_Status** untuk menyimpan status dari karakter _Agmal_ sedangkan **Spirit_Status** untuk _Iraj_.
 - Variabel **pilih** untuk memilih fitur yang ada, **inputAgmal** untuk menyimpan seberapa banyak fitur "Agmal Ayo Bangun"     dijalankan dan **inputIraj** untuk fitur "Iraj Ayo Tidur".
 - Terdapat 5 thread yang dipakai
@@ -414,6 +411,7 @@ else if(pilih==2)
 		pthread_create(&(tid3), NULL, Agmal_Bangun, NULL);
 		pthread_join(tid3, NULL);
 		inputAgmal++;
+		inputIraj = 0;
 	}
 }
 
@@ -428,6 +426,7 @@ else if(pilih==3)
 		pthread_create(&(tid4), NULL, Iraj_Tidur, NULL);
 		pthread_join(tid4, NULL);
 		inputIraj++;
+		inputAgmal = 0;
 	}
 }
 else if(pilih==4)
@@ -442,6 +441,7 @@ else
 ```
 - If condition untuk memilih fitur, tiap fitur AllStatus, Agmal maupun Iraj dipanggil maka akan menjalankan thread untuk masing-masing fitur.
 - Increment variabel **inputAgmal** dan **inputIraj** setiap Fitur Agmal atau Iraj dipanggil.
+- Set variabel **inputIraj** menjadi 0 apabila setelah pemanggilan Fitur Iraj dipanggil lalu memanggil Fitur Agmal setelahnya. Begitu juga sebaliknya.
 
 ```c
 pthread_create(&(tid5), NULL, input, NULL);
