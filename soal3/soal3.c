@@ -4,8 +4,6 @@
 #include<stdlib.h>
 #include<unistd.h>
 
-char orang1[10]="Agmal";
-char orang2[10]="Iraj";
 int WakeUp_Status;
 int Spirit_Status;
 int pilih, inputAgmal, inputIraj;
@@ -115,6 +113,7 @@ int main()
 				pthread_create(&(tid3), NULL, Agmal_Bangun, NULL);
 				pthread_join(tid3, NULL);
 				inputAgmal++;
+				inputIraj = 0;
 			}
 		}
 
@@ -129,6 +128,7 @@ int main()
 				pthread_create(&(tid4), NULL, Iraj_Tidur, NULL);
 				pthread_join(tid4, NULL);
 				inputIraj++;
+				inputAgmal = 0;
 			}
 		}
 		else if(pilih==4)
