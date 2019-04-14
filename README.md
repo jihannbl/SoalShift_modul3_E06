@@ -797,7 +797,7 @@ int main(){
     *shopStock = 5;
     changemode(1);
     while(1){
-        while(!kbhit()){
+        while(kbhit()){
             if (gameMode == 1){
                 char c = getchar();
                 if (c == '3'){
@@ -808,7 +808,7 @@ int main(){
                     changemode(0);
                     return 0;
                 }else if (c == '1'){
-                    if (foodStock > 0){
+                    if (foodStock > 0 && player->hunger_status <= 185){
                         foodStock--;
                         player->hunger_status = player->hunger_status + 15;
                     }
@@ -886,7 +886,7 @@ pthread_create(&hygiene, NULL, &hygieneStatusTimer, (void *)player);
 4. thread **hygiene** diberikan untuk menjalankan fungsi **hygieneStatusTimer**
 
 ```c
-if (foodStock > 0){
+if (foodStock > 0 && player->hunger_status <= 185){
     foodStock--;
     player->hunger_status = player->hunger_status + 15;
 }

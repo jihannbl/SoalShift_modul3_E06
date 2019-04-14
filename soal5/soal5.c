@@ -34,7 +34,7 @@ Monster* Monster_new(char *nama){
     Monster* newMonster = (Monster*)malloc(sizeof(Monster));
     newMonster->nama = nama;
     newMonster->hunger_status = 200;
-    newMonster->hygiene_status = 100;
+    newMonster->hygiene_status = 200;
     newMonster->health_status = 300;
 }
 
@@ -129,6 +129,7 @@ void *printMenu(void *arg){
             printf("Hunger : %d\n", player->hunger_status);
             printf("Hygiene : %d\n", player->hygiene_status);
             printf("Food left : %d\n", foodStock); //shared memory
+            // printf("alive status: %d\n", alive);
             if (bathCooldown == 0){
                 printf("Bath is ready\n");
             }else{
@@ -180,7 +181,7 @@ int main(){
     *shopStock = 5;
     changemode(1);
     while(1){
-        while(!kbhit()){
+        if (kbhit()){
             if (gameMode == 1){
                 char c = getchar();
                 if (c == '3'){
@@ -191,7 +192,7 @@ int main(){
                     changemode(0);
                     return 0;
                 }else if (c == '1'){
-                    if (foodStock > 0){
+                    if (foodStock > 0 && player->hunger_status <= 185){
                         foodStock--;
                         player->hunger_status = player->hunger_status + 15;
                     }
