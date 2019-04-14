@@ -545,6 +545,7 @@ Terdapat 6 thread
         {
 
         }
+	printf("Menunggu 15 detik untuk mengekstrak kembali\n");
 	sleep(15);
         chdir("/home/jihan/Documents/FolderProses1");
         system("unzip KompresProses1.zip");
@@ -559,13 +560,14 @@ Terdapat 6 thread
         {
 
         }
+	printf("Menunggu 15 detik untuk mengekstrak kembali\n");
 	sleep(15);
         chdir("/home/jihan/Documents/FolderProses2");
         system("unzip KompresProses2.zip");
   }
   ```
   - Thread ini juga menggunakan mutual exclusion, untuk menunggu apakah thread zip sebelumnya berhasil dijalankan atau tidak, dengan mengecek variabel **status1** dan **status2** sudah bernilai 2 atau belum.
-  - Menggunakan **sleep(15)** untuk menunggu selama 15 detik sebelum KompresProses1.zip maupun KompresProses2.zip diekstrak.
+  - Menggunakan **sleep(15)** untuk menunggu selama 15 detik sebelum KompresProses1.zip maupun KompresProses2.zip diekstrak. Sebelumnya tampilkan pesan "Menunggu 15 detik untuk mengekstrak kembali".
   - Setelah itu terdapat command _unzip_ untuk mengekstrak dari KompresProses1.zip dan KompresProses2.zip.
   
 **_Hasil :_**
